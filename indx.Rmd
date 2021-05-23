@@ -1,0 +1,117 @@
+---
+title: "Datos hidrológicos"
+output: html_document
+---
+## Cuencas río Estrella y río Banano, Limón, Costa Rica 
+
+```{r}
+inp <- read.csv("FDC.csv", na.strings="")
+```
+
+```{r}
+head(inp)
+```
+
+```{r}
+dim(inp)
+```
+ 
+```{r}
+inp[!complete.cases(inp),]
+
+
+```
+#newinp <- na.omit(inp)
+
+# Gráfico 1
+## Series de tiempo del volumen de agua del río Estrella y el río Banano, ubicados en la provincia de Limón.
+```{r}
+plot(inp[,2], main = "Caudal río Banano y río Estrella",
+     xlab= "1973-1983",
+     ylab= "Milimetros por día",
+    type ="l",
+     col= "green")
+lines(inp[,3], col="aqua marine")
+```
+
+## Promedio diario de los caudales Banano y Estrella en el lapso de 1973 a 1983.
+```{r}
+summary(inp[,2:3]) 
+```
+
+# Historiogramas 
+## Vista general de los datos recolectados de los caudales estudiados. En primera vista se puede observar el río Estrella y en segunda, el río Banano.
+
+```{r}
+hist(inp[,2],
+     main = "Historiograma del río Estella",
+     col = "brown",
+     xlab = "Rango",
+     ylab = "Frecuencia")
+hist(inp[,3],
+     main = "Historigrama del río Banano",
+     xlab = "Rango",
+     ylab = "Frecuencia",
+     col = "yellow")
+
+```
+
+
+```{r}
+names(inp) <- c("fecha", "Estrella", "Banano")
+attach(inp)
+```
+
+# Gráfico 2
+## Se analiza el comportamiento del caudal Estrella. 
+```{r}
+plot(Estrella,
+     col= "purple")
+
+
+```
+ 
+```{r}
+Tempdate <- strptime(inp[,1], format= "%d/%m/Y")
+```
+
+
+# Gráfico 3
+```{r}
+plot(Banano, ylim = c(100, 3000))
+lines(Estrella, col= "green")
+```
+
+## Analisis de correlacion entre el rio Estrella y rio Banano 
+
+```{r}
+corinp <- cor(inp[,2:3], method = "spearman")
+```
+
+```{r}
+corinp
+```
+
+
+# Gráfico 4
+## Diferencia de picos que representan el crecimientio del río Estrella y río Banano.
+```{r}
+
+plot(Estrella,Banano)
+```
+
+
+```{r}
+inp.lm <- lm(inp[,2] ~ inp[,3], data = inp)
+```
+
+## Medida mínima, media y máxima de los caudales. 
+```{r}
+summary(inp.lm)
+```
+
+```{r}
+plot(inp.lm,
+     col= "orange")
+```
+
